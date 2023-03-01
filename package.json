@@ -1,0 +1,22 @@
+{
+  "name": "assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongoose": "^7.0.0",
+    "nodemon": "^2.0.20",
+    "redis": "^2.7.1",
+    "axios": "^0.16.1",
+    "express": "^4.15.2",
+    "kue": "^0.11.5",
+    "valid-url": "^1.0.9"
+
+  }
+}
