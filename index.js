@@ -5,7 +5,7 @@ const kue = require("kue");
 const axios = require("axios");
 const validUrl = require("valid-url");
 const taskModel = require("./src/models/taskModel");
-// require("dotenv").config();
+
 const MONGODB_URL =
   "mongodb+srv://tannmayhedau619:Tanmay%40619@cluster0.fw1xhuw.mongodb.net/task-queue?retryWrites=true&w=majority";
 
@@ -40,27 +40,20 @@ function createJob(myUrl, res) {
     .ttl(20000)
     .save(async function (err) {
       if (!err) {
-        const jobId = job.id;
-        res.send("Your new id for the url is " + job.id); // The key to the data is the provided link
-        // console.log(job);
+        res.send("Your new id for the url is " + job.id);
 
-        client.hset(job.id, "status", "none", redis.print); // creates a new hashed object {data.id : request}
-        // db.collection.save(obj)
+        client.hset(job.id, "status", "none", redis.print);
 
         console.log(job.state());
-        const result = await taskModel.create({
+        await taskModel.create({
           jobId: job.id,
           url: myUrl,
           result: JSON.stringify(job),
         });
-      } //  request is initally set to none
-      else {
+      } else {
         res.send("There was an error importing your data");
       }
     });
-
-  // console.log(job.state());
-  // console.log(job);
 }
 
 function requestStatus(id, res) {
@@ -79,7 +72,6 @@ function requestStatus(id, res) {
 }
 
 function processRequest(job, done) {
-  // Process that grabs the HTML and updates the Redis hash
   axios.get(job.data).then(function (response) {
     client.hset(job.id, "data", response.data, redis.print);
     done();
@@ -87,7 +79,6 @@ function processRequest(job, done) {
 }
 
 queue.process("request", 5, function (job, done) {
-  // the queue can process multiple jobs, currently set to 5
   processRequest(job, done);
 });
 
